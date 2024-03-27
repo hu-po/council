@@ -1,6 +1,6 @@
 # Council of LLMs
 
-![council of elrond](cover.png)
+![Council of Elrond](cover.png)
 
 ## Setup
 

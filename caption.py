@@ -16,6 +16,7 @@ async def caption(
         asyncio.create_task(api_claude.async_image(prompt, image_path), name="Claude"),
         asyncio.create_task(api_openai.async_image(prompt, image_path), name="OpenAI"),
         asyncio.create_task(api_gemini.async_image(prompt, image_path), name="Gemini"),
+        # Replicate is slow, hence why it's commented out
         # asyncio.create_task(api_mistral.async_image(prompt, image_path), name="Mistral"),
     ]
     results = await asyncio.gather(*tasks)
