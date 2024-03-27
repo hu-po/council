@@ -1,18 +1,37 @@
+"""
+OpenAI GPT Wrapper
+https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
+"""
+
 import os
 import openai
+from openai import OpenAI
+import logging
 
-# Configure OpenAI API key
-openai.api_key = os.getenv('OPENAI_API_KEY')
+log = logging.getLogger(__name__)
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# List available models (optional, just for demonstration)
-models = openai.Model.list()
-print([model.id for model in models.data])
+def list_models() -> list[str]:
+  return [m.id for m in openai.models.list()]
 
-# Generate content with GPT-4V (assuming 'text-davinci-004' as an example model identifier for GPT-4V)
-response = openai.Completion.create(
-  model="text-davinci-004", # Replace with the actual model identifier for GPT-4V
-  prompt="Hello there",
-  max_tokens=50
-)
+def text(prompt: str, model: str = "gpt-4-1106-preview"):
+  response = client.chat.completions.create(
+      messages=[{"role": "user", "content": prompt}],
+      model=model,
+  )
+  response = response.choices[0].message.content
+  log.info(f"\n---\nOpenAI {model}\n---\nprompt: {prompt}\nresponse: {response}\n---")
+  return response
 
-print(response.choices[0].text.strip())
+def test():
+  log.debug("Testing OpenAI GPT Wrapper")
+  for model in list_models():
+      log.debug(model)
+  text("What is your name?")
+
+if __name__ == "__main__":
+  log.setLevel(logging.DEBUG)
+  handler = logging.StreamHandler()
+  handler.setLevel(logging.DEBUG)
+  log.addHandler(handler)
+  test()

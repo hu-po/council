@@ -1,23 +1,37 @@
+"""
+Anthropic Claude Wrapper
+https://console.anthropic.com/docs/api/reference
+"""
+
 import os
 import anthropic
+import logging
 
-anthropic.api_key = os.environ['ANTHROPIC_API_KEY']
+log = logging.getLogger(__name__)
+client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-# List available models
-models = anthropic.list_models()
-print([m.slug for m in models])
+def list_models() -> list[str]:
+    return ["claude-3-opus-20240229", "claude-3-haiku-20240229"]
 
-# Generate using Claude
-claude = anthropic.Client("claude-v1")
-response = claude.completion(prompt="Hello there", max_tokens_to_sample=1000)
-print(response.completion)
+def text(prompt: str, model: str = "claude-3-opus-20240229", max_tokens: int = 256):
+    response = client.messages.create(
+        messages=[{"role": "user", "content": prompt}],
+        model=model,
+        max_tokens=max_tokens,
+    )
+    response = response.content
+    log.info(f"\n---\nAnthropic {model}\n---\nprompt: {prompt}\nresponse: {response}\n---")
+    return response
 
-# Generate haiku using Haiku
-haiku = anthropic.Client("haiku")
-response = haiku.completion(prompt="Write a haiku about the ocean", max_tokens_to_sample=50) 
-print(response.completion)
+def test():
+    log.debug("Testing Anthropic Claude Wrapper")
+    for model in list_models():
+        log.debug(model)
+    text("What is your name")
 
-# Generate using Opus
-opus = anthropic.Client("opus")
-response = opus.completion(prompt="What are the key differences between Opus and Claude?", max_tokens_to_sample=500)
-print(response.completion)
+if __name__ == "__main__":
+    log.setLevel(logging.DEBUG)
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.DEBUG)
+    log.addHandler(handler)
+    test()
