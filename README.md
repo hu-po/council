@@ -13,3 +13,8 @@ pip install anthropic
 pip install pillow
 pip install replicate
 ```
+
+## Ideas
+
+- [ ] break up a video into frames w/ ffmpeg, caption each frame with council, reassemble video
+- [ ] council caption w/ iterative feedback
