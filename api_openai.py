@@ -66,6 +66,14 @@ def image(
     return response
 
 
+async def async_image(*args, **kwargs) -> str:
+    return image(*args, **kwargs)
+
+
+async def async_text(*args, **kwargs) -> str:
+    return text(*args, **kwargs)
+
+
 def test():
     log.debug("Testing OpenAI GPT Wrapper")
     for model in list_models():

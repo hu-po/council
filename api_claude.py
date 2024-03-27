@@ -51,7 +51,7 @@ def image(
                         "type": "image",
                         "source": {
                             "type": "base64",
-                            "media_type": "image/jpeg",
+                            "media_type": "image/png",
                             "data": base64_image,
                         },
                     },
@@ -59,11 +59,19 @@ def image(
             }
         ],
     )
-    response = response.content
+    response = response.content[0].text
     log.info(
         f"\n---\nAnthropic {model}\n---\nprompt: {prompt}\nresponse: {response}\n---"
     )
     return response
+
+
+async def async_image(*args, **kwargs) -> str:
+    return image(*args, **kwargs)
+
+
+async def async_text(*args, **kwargs) -> str:
+    return text(*args, **kwargs)
 
 
 def test():

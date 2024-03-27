@@ -11,4 +11,5 @@ pip install google-generativeai
 pip install openai
 pip install anthropic
 pip install pillow
+pip install replicate
 ```
